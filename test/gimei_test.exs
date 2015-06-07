@@ -1,7 +1,7 @@
 defmodule GimeiTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "return sample" do
+    assert  Gimei.sample("neko") == "neko"
   end
 end
