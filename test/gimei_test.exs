@@ -27,4 +27,7 @@ defmodule GimeiTest do
   # 八重山郡与那国町やえやまぐんよなぐにちょうヤエヤマグンヨナグニチョウ is words
   # :ok
 
+  # > Enum.at(cities, 1) |> Enum.at(0) |> IO.puts
+  # 島尻郡八重瀬町
+  # :ok
 end

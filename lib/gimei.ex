@@ -1,4 +1,5 @@
 defmodule Gimei do
+
   @moduledoc """
   Gimei is a pure Elixir library for Japanese fake data.
   """
