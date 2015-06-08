@@ -17,11 +17,12 @@ defmodule Gimei.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :yamerl]]
   end
 
   defp deps do
     [
+      {:yamerl, github: "yakaz/yamerl", tag: "v0.3.2-1"},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.7", only: :dev}
     ]
