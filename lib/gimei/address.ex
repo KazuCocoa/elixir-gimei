@@ -2,18 +2,63 @@ defmodule Gimei.Address do
 
   @data_path Path.expand(Path.join(__DIR__, "../data/small_addresses.yml"))
 
-  @spec kanji() :: {:ok, String.t}
-  def kanji do
-    IO.puts city()
+  @doc ~S"""
+  Return list of prefecture.
+
+  ## Examples
+
+      iex> Gimei.Address.prefecture()
+      ["青森県", "あおもりけん", "アオモリケン"]
+  """
+  @spec prefecture() :: list
+  def prefecture do
+    generate_list(address("prefecture"))
   end
 
-# TODO: fakerのように、読み込んだ値に対してeachを適用し、そのキーの場合分けで実装する。
-# values.each data, fn {"prefecture", values} -> ... end {"city", values} -> ... end {"town", values} -> .. end
-# https://github.com/igas/faker/blob/master/lib/faker/app.ex
+  @doc ~S"""
+  Return list of city.
 
-  defp city() do
-    {_, values} = List.flatten(:yamerl_constr.file(@data_path)) |> Enum.at(0)
-    {_, cities} = List.keyfind(values, 'city', 0)
-    Enum.at(cities, 1) |> Enum.at(0)
+  ## Examples
+
+      iex> Gimei.Address.city()
+      ["島尻郡八重瀬町", "しまじりぐんやえせちょう", "シマジリグンヤエセチョウ"]
+  """
+  @spec city() :: list
+  def city do
+    generate_list(address("city"))
+  end
+
+  @doc ~S"""
+  Return list of town.
+
+  ## Examples
+
+      iex> Gimei.Address.town()
+      ["亀尾町", "かめおちょう", "カメオチョウ"]
+  """
+  @spec town() :: list
+  def town do
+    generate_list(address("town"))
+  end
+
+
+  defp generate_list(values) do
+    Enum.reduce(values, [], fn (value, list) -> List.flatten(list, ["#{value}"]) end)
+  end
+
+  defp addresses_from_yaml do
+    {_, values} = List.flatten(:yamerl_constr.file(@data_path))
+                  |> Enum.at(0)
+    values
+  end
+
+  defp address(target) do
+    parsed_yaml = addresses_from_yaml
+    case target do
+      "prefecture" -> {_, value} = List.keyfind(parsed_yaml, 'prefecture', 0)
+      "city"       -> {_, value} = List.keyfind(parsed_yaml, 'city', 0)
+      "town"       -> {_, value} = List.keyfind(parsed_yaml, 'town', 0)
+    end
+    Enum.at(value, 1)
   end
 end

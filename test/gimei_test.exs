@@ -5,7 +5,6 @@ defmodule GimeiTest do
     assert  Gimei.sample("neko") == "neko"
   end
 
-
   # memos: 以下の手順で実施可能
   # > a = :yamerl_constr.file("lib/data/small_addresses.yml")
   # > {addresses, values} = List.flatten(a) |> List.first()
