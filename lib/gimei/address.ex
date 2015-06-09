@@ -7,10 +7,10 @@ defmodule Gimei.Address do
 
   ## Examples
 
-      iex> Gimei.Address.prefecture()
+      iex> Gimei.Address.prefecture
       ["青森県", "あおもりけん", "アオモリケン"]
   """
-  @spec prefecture() :: list
+  @spec prefecture :: list
   def prefecture do
     generate_list(address("prefecture"))
   end
@@ -20,10 +20,10 @@ defmodule Gimei.Address do
 
   ## Examples
 
-      iex> Gimei.Address.city()
+      iex> Gimei.Address.city
       ["島尻郡八重瀬町", "しまじりぐんやえせちょう", "シマジリグンヤエセチョウ"]
   """
-  @spec city() :: list
+  @spec city :: list
   def city do
     generate_list(address("city"))
   end
@@ -33,13 +33,36 @@ defmodule Gimei.Address do
 
   ## Examples
 
-      iex> Gimei.Address.town()
+      iex> Gimei.Address.town
       ["亀尾町", "かめおちょう", "カメオチョウ"]
   """
-  @spec town() :: list
+  @spec town :: list
   def town do
     generate_list(address("town"))
   end
+
+  @doc ~S"""
+  Return list of address.
+
+  ## Examples
+
+      iex> Gimei.Address.address
+      ["青森県島尻郡八重瀬町亀尾町",
+      "あおもりけんしまじりぐんやえせちょうかめおちょう",
+      "アオモリケンシマジリグンヤエセチョウカメオチョウ"]
+  """
+  @spec address :: list
+  def address do
+    prefecture = generate_list(address("prefecture"))
+    city = generate_list(address("city"))
+    town = generate_list(address("town"))
+
+    Enum.reduce([0, 1, 2], [], fn (count, list) ->
+      List.flatten(list, ["#{Enum.at(prefecture, count) <> Enum.at(city, count) <> Enum.at(town, count)}"])
+    end)
+  end
+
+
 
 
   defp generate_list(values) do
