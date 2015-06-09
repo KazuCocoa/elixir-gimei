@@ -1,6 +1,6 @@
 defmodule Gimei.Address do
-
-  @data_path Path.expand(Path.join(__DIR__, "../data/small_addresses.yml"))
+  :application.start(:yamerl)
+  @address_data Path.expand(Path.join(__DIR__, "../data/small_addresses.yml")) |> :yamerl_constr.file() |> List.first()
 
   @doc ~S"""
   Return list of prefecture.
@@ -67,12 +67,8 @@ defmodule Gimei.Address do
     Enum.reduce(values, [], fn (value, list) -> List.flatten(list, ["#{value}"]) end)
   end
 
-  defp addresses_from_yaml do
-    List.flatten(:yamerl_constr.file(@data_path))
-  end
-
   defp address(target) do
-    {_, parsed_yaml} = addresses_from_yaml
+    {_, parsed_yaml} = @address_data
                        |> Enum.at(0)
     case target do
       "prefecture" -> {_, value} = List.keyfind(parsed_yaml, 'prefecture', 0)
@@ -80,5 +76,11 @@ defmodule Gimei.Address do
       "town"       -> {_, value} = List.keyfind(parsed_yaml, 'town', 0)
     end
     Enum.at(value, 1)
+  end
+
+  defp get_random_item(list, list_count) do
+    list
+    |> Enum.at(:crypto.rand_uniform(0, list_count))
+    |> Enum.map fn(item) -> List.to_string(item) end
   end
 end

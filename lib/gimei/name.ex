@@ -1,6 +1,6 @@
 defmodule Gimei.Name do
-
-  @data_path Path.expand(Path.join(__DIR__, "../data/small_name.yml"))
+  :application.start(:yamerl)
+  @name_data Path.expand(Path.join(__DIR__, "../data/small_name.yml")) |> :yamerl_constr.file() |> List.first()
 
   @doc ~S"""
   Return List of name
@@ -33,15 +33,9 @@ defmodule Gimei.Name do
     Enum.reduce(values, [], fn (value, list) -> List.flatten(list, ["#{value}"]) end)
   end
 
-  defp names_from_yaml do
-    List.flatten(:yamerl_constr.file(@data_path))
-  end
-
   defp generate_name(gender) do
-    data = names_from_yaml
-
-    last = generate_list(last_name(data))
-    first = generate_list(first_name(data, gender))
+    last = generate_list(last_name(@name_data))
+    first = generate_list(first_name(@name_data, gender))
 
     Enum.reduce([0, 1, 2], [], fn (count, list) ->
       List.flatten(list, ["#{Enum.at(last, count)} #{Enum.at(first, count)}"])
