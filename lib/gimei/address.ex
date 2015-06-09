@@ -63,20 +63,17 @@ defmodule Gimei.Address do
   end
 
 
-
-
   defp generate_list(values) do
     Enum.reduce(values, [], fn (value, list) -> List.flatten(list, ["#{value}"]) end)
   end
 
   defp addresses_from_yaml do
-    {_, values} = List.flatten(:yamerl_constr.file(@data_path))
-                  |> Enum.at(0)
-    values
+    List.flatten(:yamerl_constr.file(@data_path))
   end
 
   defp address(target) do
-    parsed_yaml = addresses_from_yaml
+    {_, parsed_yaml} = addresses_from_yaml
+                       |> Enum.at(0)
     case target do
       "prefecture" -> {_, value} = List.keyfind(parsed_yaml, 'prefecture', 0)
       "city"       -> {_, value} = List.keyfind(parsed_yaml, 'city', 0)
