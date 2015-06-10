@@ -7,12 +7,12 @@ defmodule Gimei.Address do
 
   ## Examples
 
-      iex> Gimei.Address.prefecture
+      iex> Gimei.Address.prefecture(1)
       ["青森県", "あおもりけん", "アオモリケン"]
   """
   @spec prefecture :: list
-  def prefecture do
-    generate_list(address("prefecture"))
+  def prefecture(number \\ -1) do
+    generate_list(gran_address("prefecture", number))
   end
 
   @doc ~S"""
@@ -20,12 +20,12 @@ defmodule Gimei.Address do
 
   ## Examples
 
-      iex> Gimei.Address.city
+      iex> Gimei.Address.city(1)
       ["島尻郡八重瀬町", "しまじりぐんやえせちょう", "シマジリグンヤエセチョウ"]
   """
   @spec city :: list
-  def city do
-    generate_list(address("city"))
+  def city(number \\ -1) do
+    generate_list(gran_address("city", number))
   end
 
   @doc ~S"""
@@ -33,12 +33,12 @@ defmodule Gimei.Address do
 
   ## Examples
 
-      iex> Gimei.Address.town
+      iex> Gimei.Address.town(1)
       ["亀尾町", "かめおちょう", "カメオチョウ"]
   """
   @spec town :: list
-  def town do
-    generate_list(address("town"))
+  def town(number \\ -1) do
+    generate_list(gran_address("town", number))
   end
 
   @doc ~S"""
@@ -46,16 +46,16 @@ defmodule Gimei.Address do
 
   ## Examples
 
-      iex> Gimei.Address.address
+      iex> Gimei.Address.address(1)
       ["青森県島尻郡八重瀬町亀尾町",
       "あおもりけんしまじりぐんやえせちょうかめおちょう",
       "アオモリケンシマジリグンヤエセチョウカメオチョウ"]
   """
   @spec address :: list
-  def address do
-    prefecture = generate_list(address("prefecture"))
-    city = generate_list(address("city"))
-    town = generate_list(address("town"))
+  def address(number \\ -1) do
+    prefecture = generate_list(gran_address("prefecture", number))
+    city = generate_list(gran_address("city", number))
+    town = generate_list(gran_address("town", number))
 
     Enum.reduce([0, 1, 2], [], fn (count, list) ->
       List.flatten(list, ["#{Enum.at(prefecture, count) <> Enum.at(city, count) <> Enum.at(town, count)}"])
@@ -67,20 +67,23 @@ defmodule Gimei.Address do
     Enum.reduce(values, [], fn (value, list) -> List.flatten(list, ["#{value}"]) end)
   end
 
-  defp address(target) do
+  defp gran_address(target, number \\ -1) do
     {_, parsed_yaml} = @address_data
                        |> Enum.at(0)
     case target do
-      "prefecture" -> {_, value} = List.keyfind(parsed_yaml, 'prefecture', 0)
-      "city"       -> {_, value} = List.keyfind(parsed_yaml, 'city', 0)
-      "town"       -> {_, value} = List.keyfind(parsed_yaml, 'town', 0)
+      "prefecture" -> {_, values} = List.keyfind(parsed_yaml, 'prefecture', 0)
+      "city"       -> {_, values} = List.keyfind(parsed_yaml, 'city', 0)
+      "town"       -> {_, values} = List.keyfind(parsed_yaml, 'town', 0)
     end
-    Enum.at(value, 1)
+
+    case number do
+      -1 -> random(values)
+      _ -> Enum.at(values, number)
+    end
   end
 
-  defp get_random_item(list, list_count) do
+  defp random(list) do
     list
-    |> Enum.at(:crypto.rand_uniform(0, list_count))
-    |> Enum.map fn(item) -> List.to_string(item) end
+    |> Enum.at(:crypto.rand_uniform(0, Enum.count(list)))
   end
 end
