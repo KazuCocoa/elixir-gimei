@@ -1,6 +1,6 @@
 defmodule Gimei.Name do
   :application.start(:yamerl)
-  @name_data Path.expand(Path.join(__DIR__, "../data/small_name.yml")) |> :yamerl_constr.file() |> List.first()
+  @name_data Path.expand(Path.join(__DIR__, "../data/names.yml")) |> :yamerl_constr.file() |> List.first()
 
   @doc ~S"""
   Return List of name
@@ -21,7 +21,7 @@ defmodule Gimei.Name do
   ## Examples
 
     iex> Gimei.Name.female(0)
-    ["佐藤 藍斗", "さとう あいと", "サトウ アイト"]
+    ["佐藤 阿愛", "さとう ああい", "サトウ アアイ"]
   """
   @spec female :: list
   def female(number \\ -1) do
@@ -53,8 +53,8 @@ defmodule Gimei.Name do
     end
 
     case number do
-      -1 -> random(first_names)
-      _ -> Enum.at(first_names, number)
+      x when x >= 0 -> Enum.at(first_names, number)
+      _ -> random(first_names)
     end
   end
 
@@ -63,8 +63,8 @@ defmodule Gimei.Name do
              |> Enum.at(1)
 
     case number do
-      -1 -> random(last_names)
-      _ -> Enum.at(last_names, number)
+      x when x >= 0 -> Enum.at(last_names, number)
+      _ -> random(last_names)
     end
   end
 

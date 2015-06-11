@@ -1,6 +1,6 @@
 defmodule Gimei.Address do
   :application.start(:yamerl)
-  @address_data Path.expand(Path.join(__DIR__, "../data/small_addresses.yml")) |> :yamerl_constr.file() |> List.first()
+  @address_data Path.expand(Path.join(__DIR__, "../data/addresses.yml")) |> :yamerl_constr.file() |> List.first()
 
   @doc ~S"""
   Return list of prefecture.
@@ -21,7 +21,8 @@ defmodule Gimei.Address do
   ## Examples
 
       iex> Gimei.Address.city(1)
-      ["島尻郡八重瀬町", "しまじりぐんやえせちょう", "シマジリグンヤエセチョウ"]
+      ["札幌市北区", "さっぽろしきたく",
+            "サッポロシキタク"]
   """
   @spec city :: list
   def city(number \\ -1) do
@@ -47,9 +48,9 @@ defmodule Gimei.Address do
   ## Examples
 
       iex> Gimei.Address.address(1)
-      ["青森県島尻郡八重瀬町亀尾町",
-      "あおもりけんしまじりぐんやえせちょうかめおちょう",
-      "アオモリケンシマジリグンヤエセチョウカメオチョウ"]
+      ["青森県札幌市北区亀尾町",
+            "あおもりけんさっぽろしきたくかめおちょう",
+            "アオモリケンサッポロシキタクカメオチョウ"]
   """
   @spec address :: list
   def address(number \\ -1) do
@@ -77,8 +78,8 @@ defmodule Gimei.Address do
     end
 
     case number do
-      -1 -> random(values)
-      _ -> Enum.at(values, number)
+      x when x >= 0 -> Enum.at(values, number)
+      _ -> random(values)
     end
   end
 
