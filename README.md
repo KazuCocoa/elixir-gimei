@@ -5,6 +5,8 @@ inspired by https://github.com/willnet/gimei
 
 Develop gimei with Elixir as my training.
 
+## Hex package
+- https://hex.pm/packages/gimei
+
 ## TODOs
-- Upload elixir-gimei to hex
 - Setup Travis env
