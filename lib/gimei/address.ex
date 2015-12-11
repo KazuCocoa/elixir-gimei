@@ -10,10 +10,8 @@ defmodule Gimei.Address do
       iex> Gimei.Address.prefecture(1)
       ["青森県", "あおもりけん", "アオモリケン"]
   """
-  @spec prefecture :: list
-  def prefecture(number \\ -1) do
-    generate_list(gran_address("prefecture", number))
-  end
+  @spec prefecture(integer) :: list
+  def prefecture(number \\ -1), do: generate_list(gran_address("prefecture", number))
 
   @doc ~S"""
   Return list of city.
@@ -24,10 +22,8 @@ defmodule Gimei.Address do
       ["札幌市北区", "さっぽろしきたく",
             "サッポロシキタク"]
   """
-  @spec city :: list
-  def city(number \\ -1) do
-    generate_list(gran_address("city", number))
-  end
+  @spec city(integer) :: list
+  def city(number \\ -1), do: generate_list(gran_address("city", number))
 
   @doc ~S"""
   Return list of town.
@@ -37,10 +33,8 @@ defmodule Gimei.Address do
       iex> Gimei.Address.town(1)
       ["亀尾町", "かめおちょう", "カメオチョウ"]
   """
-  @spec town :: list
-  def town(number \\ -1) do
-    generate_list(gran_address("town", number))
-  end
+  @spec town(integer) :: list
+  def town(number \\ -1), do: generate_list(gran_address("town", number))
 
   @doc ~S"""
   Return list of address.
@@ -52,21 +46,19 @@ defmodule Gimei.Address do
             "あおもりけんさっぽろしきたくかめおちょう",
             "アオモリケンサッポロシキタクカメオチョウ"]
   """
-  @spec address :: list
+  @spec address(integer) :: list
   def address(number \\ -1) do
     prefecture = generate_list(gran_address("prefecture", number))
     city = generate_list(gran_address("city", number))
     town = generate_list(gran_address("town", number))
 
-    Enum.reduce([0, 1, 2], [], fn (count, list) ->
-      List.flatten(list, ["#{Enum.at(prefecture, count) <> Enum.at(city, count) <> Enum.at(town, count)}"])
+    Enum.reduce([0, 1, 2], [], fn (count, acc) ->
+      acc
+      |> List.flatten(["#{Enum.at(prefecture, count) <> Enum.at(city, count) <> Enum.at(town, count)}"])
     end)
   end
 
-
-  defp generate_list(values) do
-    Enum.reduce(values, [], fn (value, list) -> List.flatten(list, ["#{value}"]) end)
-  end
+  defp generate_list(values), do: values |> Enum.reduce([], fn (value, list) -> List.flatten(list, ["#{value}"]) end)
 
   defp gran_address(target, number \\ -1) do
     {_, parsed_yaml} = @address_data
@@ -79,12 +71,9 @@ defmodule Gimei.Address do
 
     case number do
       x when x >= 0 -> Enum.at(values, number)
-      _ -> random(values)
+      _             -> random(values)
     end
   end
 
-  defp random(list) do
-    list
-    |> Enum.at(:crypto.rand_uniform(0, Enum.count(list)))
-  end
+  defp random(list), do: list |> Enum.at(:crypto.rand_uniform(0, Enum.count(list)))
 end
