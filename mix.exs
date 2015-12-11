@@ -31,7 +31,7 @@ defmodule Gimei.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "mix.lock"],
-      contributors: ["Kazuaki Matsuo"],
+      maintainers: ["Kazuaki Matsuo"],
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/KazuCocoa/elixir-gimei"}
