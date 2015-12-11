@@ -4,7 +4,7 @@ defmodule Gimei.Mixfile do
   def project do
     [
       app: :gimei,
-      version: "0.0.1",
+      version: "0.0.2",
       elixir: "~> 1.0",
       description: "Gimei is a pure Elixir library for genrating Japanese fake data.",
       package: package,
